@@ -81,33 +81,29 @@ console.log(c) // {name: 1, address: {city: 5, home: 3}}
 
 4. 工具库：lodash 的 cloneDeep 方法
 
-#### 简易版
+#### 简易易记版
 ```js
 const cloneDeep = (target) => {
-  // 定义一个变量
   let result;
   // 如果当前需要深拷贝的是一个对象的话
   if (typeof target === 'object') {
-    // 如果是一个数组的话
+    // 数组
     if (Array.isArray(target)) {
-      result = []; // 将result赋值为一个数组，并且执行遍历
+      result = [];
       for (let i in target) {
         result.push(deepClone(target[i]))
       }
      // 判断如果当前的值是null的话；直接赋值为null
     } else if(target===null) {
       result = null;
-   // 判断如果当前的值是一个RegExp对象的话，直接赋值    
-    } else if(target.constructor===RegExp){
-      result = target;
     } else {
-     // 否则是普通对象，直接for in循环，递归赋值对象的所有值
+     // 普通对象，直接for in循环，递归赋值对象的所有值
       result = {};
       for (let i in target) {
         result[i] = deepClone(target[i]);
       }
     }
-   // 如果不是对象的话，就是基本数据类型，那么直接赋值
+   // 基本数据类型，直接赋值
   } else {
     result = target;
   }
@@ -118,6 +114,64 @@ const cloneDeep = (target) => {
 #### 完整版
 ```js
 const cloneDeep = (target, map = new WeakMap()) => {
-  
+  // Map 强引用，需要手动清除属性才能释放内存。
+  // WeakMap 弱引用，随时可能被垃圾回收，使内存及时释放，是解决循环引用的不二之选。
+
+  // null 和 undefined
+  if (target === null || target === undefined) return target
+  // 基本类型
+  if (typeof target !== 'object' && typeof target !== 'function') return target
+  // Date和RegExp对象
+  if (target instanceof Date) return new Date(target)
+  if (target instanceof RegExp) return new RegExp(target)
+  // 函数和箭头函数
+  if (typeof target === 'function') return handleFunction(target)
+
+  // 对象
+  // 循环引用
+  if (map.get(target)) return map.get(target)
+  let cloneObj = new target.constructor()
+  map.set(target, cloneObj)
+
+  // set
+  if (getType(target) === '[object Set]') {
+    target.forEach(item => cloneObj.add(cloneDeep(item, map)))
+  }
+  // map，key可以为对象
+  if (getType(target) === '[object Map]') {
+    target.forEach((item, key) => cloneObj.set(cloneDeep(key, map), cloneDeep(item, map)))
+  }
+
+  // 其他对象
+  // Set和Map不能使用for in遍历
+  for (let key in target) {
+    if (target.hasOwnProperty(key)) {
+      cloneObj[key] = cloneDeep(target[key], map)
+    }
+  }
+}
+
+const handleFunction = (target) => {
+  // 箭头函数
+  if (!target.prototype) return target
+
+  const bodyReg = /(?<={)(.|\n)+(?=})/m
+  const paramReg = /(?<=\().+(?=\)\s+{)/
+
+  const funcString = target.toString()
+  // 分别匹配 函数参数 和 函数体
+  const param = paramReg.exec(funcString)
+  const body = bodyReg.exec(funcString)
+  if (!body) return null
+  if (param) {
+    const paramArr = param[0].split(',')
+    return new Function(...paramArr, body[0])
+  } else {
+    return new Function(body[0])
+  }
+}
+
+const getType = (target) => {
+  return Object.prototype.toString().call(target)
 }
 ```
