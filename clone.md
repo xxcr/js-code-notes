@@ -112,6 +112,7 @@ const cloneDeep = (target) => {
 ```
 
 #### 完整版
+参照  https://juejin.cn/post/6902060047388377095
 ```js
 const cloneDeep = (target, map = new WeakMap()) => {
   // Map 强引用，需要手动清除属性才能释放内存。
