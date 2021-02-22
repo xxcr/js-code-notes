@@ -34,8 +34,8 @@ const shallowClone = (target) => {
 ### 判断对象属性是否存在
 1. hasOwnProperty() 只能检测自有属性
 2. in 可以检测自有属性和继承属性
-3. 使用!==检测，使用！需要注意对象的属性值不能设置为undefined
-   注意必须是！，而不是！= 因为！=不区分undefined和null
+3. 使用!==检测，使用！==需要注意对象的属性值不能设置为undefined
+   注意必须是！==，而不是！= 因为！=不区分undefined和null
 
 
 ## 和赋值区别
@@ -81,36 +81,6 @@ console.log(c) // {name: 1, address: {city: 5, home: 3}}
 
 4. 工具库：lodash 的 cloneDeep 方法
 
-#### 简易易记版
-```js
-const cloneDeep = (target) => {
-  let result;
-  // 如果当前需要深拷贝的是一个对象的话
-  if (typeof target === 'object') {
-    // 数组
-    if (Array.isArray(target)) {
-      result = [];
-      for (let i in target) {
-        result.push(deepClone(target[i]))
-      }
-     // 判断如果当前的值是null的话；直接赋值为null
-    } else if(target===null) {
-      result = null;
-    } else {
-     // 普通对象，直接for in循环，递归赋值对象的所有值
-      result = {};
-      for (let i in target) {
-        result[i] = deepClone(target[i]);
-      }
-    }
-   // 基本数据类型，直接赋值
-  } else {
-    result = target;
-  }
-  return result;
-}
-```
-
 #### 完整版
 参照  https://juejin.cn/post/6902060047388377095
 ```js
@@ -152,6 +122,7 @@ const cloneDeep = (target, map = new WeakMap()) => {
   }
 }
 
+// 拷贝函数的方法
 const handleFunction = (target) => {
   // 箭头函数
   if (!target.prototype) return target
@@ -170,6 +141,14 @@ const handleFunction = (target) => {
   } else {
     return new Function(body[0])
   }
+}
+
+
+// todo 这个方法可以复制函数，待验证
+if (target instanceof Function) {
+  return function () {
+    return target.apply(this, [...arguments]);
+  };
 }
 
 const getType = (target) => {
