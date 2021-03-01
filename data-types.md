@@ -131,13 +131,52 @@
      -   Foo.prototype本来是有constructor属性的，是Function，但被重新定义为{}。
      -   找不到constructor，接着往原型链上查找。（{}是由Object构造函数生成的，它的原型是Object.prototype）找到了Object.prototype，含有属性constructor，值为Object
      
-4. 
+4. Object.prototype.toString.call()
+    -  > 原理(摘自高级程序设计3)：在任何值上调用 Object 原生的 toString() 方法，都会返回一个 [object NativeConstructorName] 格式的字符串。每个类在内部都有一个 [[Class]] 属性，这个属性中就指定了上述字符串中的构造函数名。
+    
+        但是它不能检测非原生构造函数的构造函数名。
+    
+    -   例：    
+         ```js
+        Object.prototype.toString.call(1);  '[object Number]'
+        Object.prototype.toString.call(NaN); '[object Number]'
+        Object.prototype.toString.call('1'); '[object String]'
+        Object.prototype.toString.call(true); '[object Boolean]'
+        Object.prototype.toString.call(undefined); '[object Undefined]'
+        Object.prototype.toString.call(null); '[object Null]'  
+        Object.prototype.toString.call(Symbol());'[object Symbol]' 
+        Object.prototype.toString.call(foo);  '[object Function]'  
+        Object.prototype.toString.call([1,2,3]); '[object Array]'   
+        Object.prototype.toString.call({});'[object Object]'
+        ```
+   -   call()方法可以改变this的指向，那么把Object.prototype.toString()方法指向不同的数据类型上面，返回不同的结果
 
+5. 其他单一判断的
+   -   Array.isArray()
+       用于确定传递的值是否是一个Array。如果对象是Array，则返回true，否则为false。
+   -   isNaN()和Number.isNaN
+       用来确定一个值是否为 NaN。
+       >isNaN(undefined); // true   
+       isNaN({}); // true   
+       isNaN()只要不是number就会返回 true。所以使用Number.isNaN()
 
-
-
-
-
+   -   判断是否是 DOM 元素，利用的是 DOM 对象特有的 nodeType 属性
+       ```js
+       function (obj){
+         return !!(obj && obj.nodeType === 1)
+       }
+       ```
+       
+   -   判断是否是 arguments 对象，使用：
+   Object.prototype.toString.call(obj)   // '[object Arguments]'
+   > 低版本的浏览器不支持, 他们返回的是 [object Object], 所以需要兼容：
+   原理是通过对象的 hasOwnProperty 方法来判断对象是否拥有 callee 属性从而判断是不是 arguments 对象
+    ```js
+    function (obj){
+      return Object.prototype.toString.call(obj) === '[object Arguments]' || (obj != null && Object.hasOwnProperty.call(obj, 'callee'))
+    }
+    ```
 
 ## 参考文献
 1. [JavaScript中constructor属性](https://segmentfault.com/a/1190000013245739)
+2. [彻底弄清JS数据类型判断](https://zhuanlan.zhihu.com/p/129642585)
