@@ -201,5 +201,3 @@
 ## 参考文献
 1. [JavaScript中constructor属性](https://segmentfault.com/a/1190000013245739)
 2. [彻底弄清JS数据类型判断](https://zhuanlan.zhihu.com/p/129642585)
-3. [0.1 + 0.2不等于0.3？为什么JavaScript有这种“骚”操作？](https://juejin.cn/post/6844903680362151950)
-4. [Number - 加减危机 —— 为什么会出现这样的结果？](https://github.com/LiangJunrong/document-library/blob/master/JavaScript-library/JavaScript/%E5%85%B6%E4%BB%96/Number%20-%20%E5%8A%A0%E5%87%8F%E5%8D%B1%E6%9C%BA.md)

@@ -21,3 +21,7 @@
       由于IEEE 754尾数位数限制，需要将后面多余的位截掉，精度丢失
 
 2. 对阶运算（小数点位置对齐）
+
+
+3. [0.1 + 0.2不等于0.3？为什么JavaScript有这种“骚”操作？](https://juejin.cn/post/6844903680362151950)
+4. [Number - 加减危机 —— 为什么会出现这样的结果？](https://github.com/LiangJunrong/document-library/blob/master/JavaScript-library/JavaScript/%E5%85%B6%E4%BB%96/Number%20-%20%E5%8A%A0%E5%87%8F%E5%8D%B1%E6%9C%BA.md)
