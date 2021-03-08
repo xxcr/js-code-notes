@@ -6,3 +6,4 @@ js的一些手写代码，以及涉及到的相关知识
 -   [数据类型及判断](https://github.com/xxcr/js-code-notes/blob/main/data-types.md)
 -   [Number精度](https://github.com/xxcr/js-code-notes/blob/main/Number%E7%B2%BE%E5%BA%A6.md)
 -   [原型和原型链](https://github.com/xxcr/js-code-notes/blob/main/%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE.md)
+-   [对象遍历](https://github.com/xxcr/js-code-notes/blob/main/%E9%81%8D%E5%8E%86%E5%AF%B9%E8%B1%A1.md)
