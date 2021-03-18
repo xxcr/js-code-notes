@@ -156,7 +156,7 @@ Arguments(3) ["xuxu", "18", "front end", callee: ƒ, Symbol(Symbol.iterator): ƒ
    -   length 属性表示的是实参的长度，即调用函数的时候传入的参数个数。
    -   callee 属性则指向的函数自身，我们可以通过它来调用自身函数。
 
-#### 4. 判断数据类, 前面介绍过
+#### 4. 判断数据类型, 前面介绍过
 
     `Object.prototype.toString.call(obj)`
 
