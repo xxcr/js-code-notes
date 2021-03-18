@@ -78,19 +78,19 @@ log.call()  // // Cannot read the property of 'a' of undefined
 
 因为第二个参数的不同，所以 `call()`和`apply()` 有一些适用条件。当你的参数是明确知道数量时用 call 。而不确定的时候用 apply，然后把参数 push 进数组传递进去。当参数数量不确定时，函数内部也可以通过 arguments 这个类数组来遍历所有的参数。
 
-1. __数组后面追加一个数组__
+#### 1. 数组后面追加一个数组
 
     `Array.prototype.push.apply(array1, array2)`
   
     当然 ES6 提供更简洁的形式 `arr1.push(...arr2)`
 
-2. __获取数组中的最大值和最小值__
+#### 2. 获取数组中的最大值和最小值
 
     `Math.max.apply(null, array1)`
   
     ES6：`Math.max(...array1)`
 
-3. __将类数组转换为数组__
+#### 3. 将类数组转换为数组
 
     `Array.prototype.slice.call(arrayLike)`
   
@@ -110,11 +110,11 @@ log.call()  // // Cannot read the property of 'a' of undefined
 
     >  arguments 对象，还有像调用 getElementsByTagName , document.childNodes 之类的，它们返回NodeList对象都属于类数组对象。
 
-4. __判断数据类型__ 前面介绍过
+#### 4. 判断数据类, 前面介绍过
 
     `Object.prototype.toString.call(obj)`
 
-5. __构造函数继承__
+#### 5. 构造函数继承
 
     借用父类的构造函数来增强子类实例，等于是复制父类的实例属性给子类。
 
@@ -152,7 +152,7 @@ log.call()  // // Cannot read the property of 'a' of undefined
 
     ```
 
-6. __面试题__
+#### 6. 面试题
 
     定义一个 log 方法，让它可以代理 console.log 方法。
     也许你直接写出：
@@ -194,9 +194,9 @@ log.call()  // // Cannot read the property of 'a' of undefined
 
 实现思路：利用谁调用函数，函数的 this 就指向谁这一特点来实现。
 
-    -   把函数 this 指向传入的对象 context
-    -   执行 fun 方法
-    -   由于我们添加了 fun 方法 ，所以需要删除 fun
+  -   把函数 this 指向传入的对象 context
+  -   执行 fun 方法
+  -   由于我们添加了 fun 方法 ，所以需要删除 fun
 
 ```js
 
