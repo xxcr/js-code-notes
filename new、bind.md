@@ -106,12 +106,57 @@ altwrite.call(document, "hello")
 
      ```
 
-#### 2. 
+#### 2. 配合 setTimeout
+
+这个和上面第二种类似。一般情况下setTimeout()的this指向window或global对象。
+
+```js
+
+  function Person (name) {
+    this.name = name
+  }
+
+  // 1秒后调用getInfo函数
+  Person.prototype.print = function () {
+    window.setTimeout(this.getInfo.bind(this), 1000)
+  }
+
+  Person.prototype.getInfo = function () {
+    console.log('My name is' + this.name)
+  }
+
+```
+
+#### 3. 偏函数
+
+
+#### 4. 绑定函数作为构造函数
+
+#### 5. 捷径
+
+`bind()` 也可以为需要特定this值的函数创造捷径。
+
+以类数组对象转换为的数组为例，当然用前面介绍过的ES6 的 拓展运算 是最好的
+
+```js
+
+Array.prototype.slice.call(arguments)
+
+```
+
+但如果有很多类数组对象，就需要写
+
+
+### 代码实现
 
 
 
 
+### 最后注意点
 
+1. 使用 `bind()` 绑定一个函数，后续再次使用 `bind()` 绑定没有作用。最后执行函数 fn 时，this 始终时被指向第一次 `bind()` 时的 thisArg。
+
+2. 使用 `bind()` 绑定函数 this 后，不能使用  `cal()` 和 `bind()`  改变函数的指向。
 
 ## 参考文献
 1. [Function.prototype.bind()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind)
