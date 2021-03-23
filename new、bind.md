@@ -129,8 +129,47 @@ altwrite.call(document, "hello")
 
 #### 3. 偏函数
 
+bind() 的另一个最简单的用法是使一个函数拥有预设的初始参数。
+只要将这些参数（如果有的话）作为 bind() 的参数写在 this 后面。当绑定函数被调用时，这些参数会被插入到目标函数的参数列表的开始位置，传递给绑定函数的参数会跟在它们后面。
+
+```js
+
+function list() {
+  return Array.prototype.slice.call(arguments);
+}
+
+function addArguments(arg1, arg2) {
+    return arg1 + arg2
+}
+
+var list1 = list(1, 2, 3); // [1, 2, 3]
+
+var result1 = addArguments(1, 2); // 3
+
+// 创建一个函数，它拥有预设参数列表。
+var leadingThirtysevenList = list.bind(null, 37);
+
+// 创建一个函数，它拥有预设的第一个参数
+var addThirtySeven = addArguments.bind(null, 37);
+
+var list2 = leadingThirtysevenList();
+// [37]
+
+var list3 = leadingThirtysevenList(1, 2, 3);
+// [37, 1, 2, 3]
+
+var result2 = addThirtySeven(5);
+// 37 + 5 = 42
+
+var result3 = addThirtySeven(5, 10);
+// 37 + 5 = 42 ，第二个参数被忽略
+
+```
 
 #### 4. 绑定函数作为构造函数
+
+绑定函数自动适应于使用 new 操作符去构造一个由目标函数创建的新实例。
+当一个绑定函数是用来构建一个值的，原来提供的 this 就会被忽略。不过提供的参数列表仍然会插入到构造函数调用时的参数列表之前。
 
 #### 5. 捷径
 
@@ -144,7 +183,15 @@ Array.prototype.slice.call(arguments)
 
 ```
 
-但如果有很多类数组对象，就需要写
+但如果有很多类数组对象，就需要写很多的个这样的表达式，所以可以使用 `bind()` 
+
+```js
+
+let slice = Function.prototype.call.bind(Array.prototype.slice)
+
+slice(arguments)
+
+```
 
 
 ### 代码实现
