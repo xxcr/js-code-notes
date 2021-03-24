@@ -196,6 +196,32 @@ slice(arguments)
 
 ### 代码实现
 
+使用 `call()` 和 `apply()`，如果要求不用call，自己实现个call，然后替换。
+
+#### 第一步
+
+arguments中第一个元素就是我们调用bind时候传入的第一个参数obj，使用apply这个函数，调用了greeting，并把greeting中的this指向了obj
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
