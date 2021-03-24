@@ -13,7 +13,7 @@
 3. Number:
 
 -   遵循 IEEE 754 标准 通过64位来表示一个数字（整数和浮点数）
--   详细参考：[Number精度]
+-   详细参考：[Number精度](https://github.com/xxcr/js-code-notes/blob/main/Number%E7%B2%BE%E5%BA%A6.md)
     
 #### 基本类型和引用类型区别
 1. 存储的地址：
