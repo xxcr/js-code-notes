@@ -16,6 +16,7 @@ altwrite('hellow') // Uncaught TypeError: Illegal invocation
 ```
 
 很简单，this指向的问题，write方法的this指向的是 document对象，赋值给 altwrite，altwrite没有通过调用就直接执行，this的指向global或window对象。
+
 如果想要altwrite 方法的this 也指向document 对象，也可以使用前面介绍过的 [cal() 和 apply()]() 
 
 ```js
@@ -41,11 +42,15 @@ altwrite.call(document, "hello")
 
 -   都可以利用后续参数传参，其中 `cal()` 和 `bind()` 的传参一样。
 
--   不使用第一个参数，方法的this会被绑定为全局对象。在严格模式下，this 的值将会是 undefined。
-
 #### 2. 区别：
 
-    `bind()` 是返回对应函数，便于稍后调用；`cal()` 和 `apply()` 则是立即调用，返回执行函数后的值。
+-   `bind()` 是返回对应函数，便于稍后调用；`cal()` 和 `apply()` 则是立即调用，返回执行函数后的值。
+
+-   `cal()` 和 `bind()` 不使用第一个参数，方法的this会被绑定为全局对象。在严格模式下，this 的值将会是 undefined。
+   
+    `bind()` 如果 bind 函数的参数列表为空，或者thisArg是null或undefined，执行作用域 的 this 将被视为新函数的 第一个参数。
+
+-   `bind()` 使用 new 运算符构造绑定函数，则忽略第一个参数。
 
 ### 实例
 
@@ -194,25 +199,133 @@ slice(arguments)
 ```
 
 
-### 代码实现
+### 代码实现 （ES6以前）
 
-使用 `call()` 和 `apply()`，如果要求不用call，自己实现个call，然后替换。
+1. 先说好，这里使用ES6以前的方法实现，使用ES6可以简化一些操作。
+
+2. 使用 `call()` 和 `apply()`，如果要求不用call，自己实现个call，然后替换。
+
+举个栗子：
+
+```js
+
+let a = b.bind(obj, '1', '2')
+
+a('3')
+
+```
 
 #### 第一步
 
-arguments中第一个元素就是我们调用bind时候传入的第一个参数obj，使用apply这个函数，调用了greeting，并把greeting中的this指向了obj
+改变this指向，返回个函数稍后执行。
 
+1. arguments中第一个元素就是我们调用bind时候传入的第一个参数obj，使用apply这个函数，调用了a，并把a中的this指向了obj。
 
+    ```js
+    
+    Function.prototype.myBind = function () {
+        
+      return this.apply(arguments[0])
+    }
+    
+    ```
 
+2. 由于bind函数并不是立即执行，而是要返回一个函数，所以包装在一个函数当中进行返回。（ES6 可以使用箭头函数）
 
+    ```js
+    
+    Function.prototype.myBind = function () {
+      let self = this
+    
+      return function () {
+        return self.apply(arguments[0])
+      }
+    }
+    
+    ```
 
+3. 最后再判断一下a是否是 function，就完美了
 
+    ```js
+    
+    Function.prototype.myBind = function () {
+      if (typeof this !== 'function') {
+        throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable')
+      } 
+    
+      let self = this
+    
+      return function () {
+        return self.apply(arguments[0])
+      }
+    }
+    
+    ```
 
+这样就完美的完成了 __第一步：改变this指向，返回个函数__
 
+#### 第二步
 
+调用 `bind()` 时，除了传需要绑定this值的对象外，还可能传入其他参数 '1', '2'。将arguments类数组对象截取除obj 转换成数组（ES6 可以使用 [...arguments]），得到的args传入apply函数（apply参数时数组）。
 
+```js
 
+Function.prototype.myBind = function () {
+  if (typeof this !== 'function') {
+    throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable')
+  } 
 
+  let self = this
+  let args = Array.prototype.slice.call(arguments, 1)
+
+  return function () {
+    return self.apply(arguments[0], args)
+  }
+}
+
+```
+
+#### 第三步
+
+在使用a函数的时候，也可能传入参数，所以需要将传入的参数合并到 `apply()` 的第二个参数中。
+
+我们使用a函数的时候，实际上是执行return的那个函数，即
+
+```js
+
+return function () {
+  return self.apply(arguments[0], args)
+}
+
+```
+
+所以，只需要将这个函数的 arguments 拼在 args 的后面。（ES6更简洁）
+
+```js
+
+Function.prototype.myBind = function () {
+  if (typeof this !== 'function') {
+    throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable')
+  } 
+
+  let self = this
+  let args = Array.prototype.slice.call(arguments, 1)
+
+  return function () {
+    Array.prototype.push.apply(args, Array.prototype.slice.call(arguments))
+    return self.apply(arguments[0], args)
+  }
+}
+
+```
+
+到这一步基本已经实现上面栗子中的bind。
+
+#### 第四步
+
+`bind()` 函数会创建一个新绑定函数。绑定函数也可以使用new运算符构造，提供的this值会被忽略，但前置参数仍会提供给模拟函数。
+
+这一步主要实现这个功能的，但这个是什么意思呢？
 
 
 
