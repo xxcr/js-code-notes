@@ -176,6 +176,41 @@ var result3 = addThirtySeven(5, 10);
 绑定函数自动适应于使用 new 操作符去构造一个由目标函数创建的新实例。
 当一个绑定函数是用来构建一个值的，原来提供的 this 就会被忽略。不过提供的参数列表仍然会插入到构造函数调用时的参数列表之前。
 
+什么意思？先看一个栗子：
+
+```js
+
+function Person (name, age) {
+  this.name = name
+  this.age = age
+  
+  this.getInfo = function () {
+    console.log(this.name + this.age)
+  }
+}
+
+let p1 = new Person('xuxu', 18)
+p1.getInfo() // xuxu18
+
+```
+
+使用`bind()` :
+
+```js
+
+let obj = {
+  age: 19
+}
+
+let newPerson = Person.bind(obj, 'x')
+let p2 = new newPerson(5)
+p2.getInfo() // x5
+
+```
+
+根据 `bind()` 的用法，newPerson 的 this 是指向obj
+
+
 #### 5. 捷径
 
 `bind()` 也可以为需要特定this值的函数创造捷径。
@@ -323,7 +358,7 @@ Function.prototype.myBind = function () {
 
 #### 第四步
 
-`bind()` 函数会创建一个新绑定函数。绑定函数也可以使用new运算符构造，提供的this值会被忽略，但前置参数仍会提供给模拟函数。
+绑定函数自动适应于使用 new 操作符去构造一个由目标函数创建的新实例。当一个绑定函数是用来构建一个值的，原来提供的 this 就会被忽略。不过提供的参数列表仍然会插入到构造函数调用时的参数列表之前。
 
 这一步主要实现这个功能的，但这个是什么意思呢？
 
