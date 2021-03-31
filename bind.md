@@ -208,7 +208,7 @@ p2.getInfo() // x5
 
 ```
 
-根据 `bind()` 的用法，newPerson 的 this 是指向obj
+根据 `bind()` 的用法，newPerson 的 this 是指向obj，但使用new new运算符构造时，提供的this将被忽略，所以this指向了p2。
 
 
 #### 5. 捷径
@@ -344,11 +344,12 @@ Function.prototype.myBind = function () {
   } 
 
   let self = this
+  let thatArgs = arguments[0]
   let args = Array.prototype.slice.call(arguments, 1)
 
   return function () {
     Array.prototype.push.apply(args, Array.prototype.slice.call(arguments))
-    return self.apply(arguments[0], args)
+    return self.apply(thatArgs, args)
   }
 }
 
@@ -360,7 +361,21 @@ Function.prototype.myBind = function () {
 
 绑定函数自动适应于使用 new 操作符去构造一个由目标函数创建的新实例。当一个绑定函数是用来构建一个值的，原来提供的 this 就会被忽略。不过提供的参数列表仍然会插入到构造函数调用时的参数列表之前。
 
-这一步主要实现这个功能的，但这个是什么意思呢？
+这一步主要实现这个功能的，意思是使用 new 构造一个由目标函数创建的新实例
+
+```js
+
+let newPerson = Person.bind(obj, 'x')
+
+console.log(newPerson) // f Person() 返回Person函数
+
+let p2 = new newPerson()
+
+``` 
+忽略 `bind()` 中的obj，然后this指向为创建的实例p2。
+
+1. 第三步实现的返回的函数叫 fBound 吧，在调用的时候才执行，这个函数中return 的是self 执行结果，在这里就是构造函数。所以使用 new 调用的时候，构造函数的this应该指向创建的实例，this 值就是创建的实例，所以判断返回的函数是否是this的构造函数，是
+
 
 
 
