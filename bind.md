@@ -374,18 +374,69 @@ let p2 = new newPerson()
 ``` 
 忽略 `bind()` 中的obj，然后this指向为创建的实例p2。
 
-1. 第三步实现的返回的函数叫 fBound 吧，在调用的时候才执行，这个函数中return 的是self 执行结果，在这里就是构造函数。所以使用 new 调用的时候，构造函数的this应该指向创建的实例，this 值就是创建的实例，所以判断返回的函数是否是this的构造函数，是
+1. 第三步实现的返回的函数叫 fBound 吧，可以看到，返回的 fBound 函数还只是调用`bind()` 方法的那个函数，即上面的 `Person` ，在执行的时候才绑定this值 和 参数。根据 new 的定义，在 new 的时候，this 值指向创建的实例，所以返回的 fBound 被 new 的时候，this是指向实例的，所以我们判断 fBound 是否在this的原型链上，在则说明是通过new 调用了，返回的`Person` 的this 指向实列，否则指向 obj。
+
+    在new关键字调用下，p2 “继承”自 Person.prototype 的实例，所以，我们把 fBound 的 prototype 修改为 Person 的 prototype。
+
+    ```js
+    
+    Function.prototype.myBind = function () {
+      if (typeof this !== 'function') {
+        throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable')
+      } 
+
+      let self = this
+      let thatArgs = arguments[0]
+      let args = Array.prototype.slice.call(arguments, 1)
+
+      let fBound  = function () {
+        Array.prototype.push.apply(args, Array.prototype.slice.call(arguments))
+        return self.apply( this instanceof fBound ? this : thatArg, args)
+      }
+
+      fBound.prototype = self.prototype
+
+      return fBound
+    }
+
+    ```
+
+2. 上面代码有个问题：fBound 的原型 就是 绑定函数即 Person 的 原型，但我们改了fBound.prototype 即 `newPerson.prototype = {}` ，这样Person的原型也被修改了。因此，我们需要一个中间变量fNOP，让它等于一个空函数，通过fNOP来维护原型关系，并让fBound.prototype 与 Person.prototype 不再指向同一个原型函数：
+
+    ```js
+
+    Function.prototype.myBind = function () {
+      if (typeof this !== 'function') {
+        throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable')
+      } 
+
+      let self = this
+      let thatArgs = arguments[0]
+      let args = Array.prototype.slice.call(arguments, 1)
+
+      let fBound  = function () {
+        Array.prototype.push.apply(args, Array.prototype.slice.call(arguments))
+        return self.apply( this instanceof fBound ? this : thatArg, args)
+      }
+
+      let fNOP = function () {}
+
+      if (self.prototype) {
+        fNOP.prototype = self.prototype
+      }
+
+      fBound.prototype = new fNOP()
+
+      return fBound
+    }
+
+    ```
+
+    fNOP和 Person 使用同一个 prototype，而 fBound.prototype 是fNOP的一个实例，而这个实例的 \_\_proto\_\_ 才指向的是 Person.prototype。因此，直接修改 fBound.prototype并不会修改 Person的prototype。
 
 
-
-
-
-
-
-
-
-
-
+#### 结尾
+以上实现 `bind()` 与实际的算法还有许多其他的不同。借用[Function.prototype.bind()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) 上面的话来说，尽管可能还有其他不同之处，但已经没有必要再多列举。
 
 
 ### 最后注意点
