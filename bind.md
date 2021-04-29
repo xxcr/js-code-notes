@@ -446,6 +446,7 @@ let p2 = new newPerson()
 2. 使用 `bind()` 绑定函数 this 后，不能使用  `cal()` 和 `bind()`  改变函数的指向。
 
 ## 参考文献
+
 1. [Function.prototype.bind()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind)
 2. [前端面试题——自己实现bind](https://zhuanlan.zhihu.com/p/85438296)
 3. [Javascript中bind()方法的使用与实现](https://segmentfault.com/a/1190000002662251)
