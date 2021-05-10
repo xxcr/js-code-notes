@@ -12,5 +12,5 @@ js的一些手写代码，以及涉及到的相关知识
 8. [继承](https://github.com/xxcr/js-code-notes/blob/main/%E7%BB%A7%E6%89%BF.md)
 9. [防抖、节流](https://github.com/xxcr/js-code-notes/blob/main/%E8%8A%82%E6%B5%81%E3%80%81%E9%98%B2%E6%8A%96.md)
 10. [设计模式](https://github.com/xxcr/js-code-notes/tree/main/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F)
-   -   [适配器模式](https://github.com/xxcr/js-code-notes/blob/main/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F.md)
-   -   [单例模式](https://github.com/xxcr/js-code-notes/blob/main/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F.md)
+    -   [适配器模式](https://github.com/xxcr/js-code-notes/blob/main/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F.md)
+    -   [单例模式](https://github.com/xxcr/js-code-notes/blob/main/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F.md)
