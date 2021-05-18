@@ -226,17 +226,77 @@ obj1 = null // 将obj1进行释放
 
 #### 其他数据类型
 
+1. 上面只考虑普通对象和数组，但还有很多数据类型。所以我们需要分情况讨论：
+
+    -   基本数据类型直接返回。
+    -   `set、map` 等这些都是 `可持续遍历` ，函数、正则等是不可持续遍历的，都需要单独进行克隆。
+
+2. 我们不能再像上面那样 `const cloneTarget = Array.isArray(target) ? [] : {}` 获取它们的初始化数据。可以通过拿到 `constructor` 的方式来通用的获取。
+
+    `const cloneTarget = new target.constructor()`
+
+    `const target = {}` 就是 `const target = new Object()` 的语法糖。
+    这种方法还有一个好处：因为我们还使用了原对象的构造方法，所以它可以保留对象原型上的数据，如果直接使用普通的{}，那么原型必然是丢失了的。
+
+3. 获取准确的引用类型：`toString()` 方法。
+
+> 每一个引用类型都有 `toString()` 方法，默认情况下，`toString()` 方法被每个 `Object` 对象继承。如果此方法在自定义对象中未被覆盖，`toString()` 返回 `"[object type]"`，其中type是对象的类型。
+
+注意：上面提到了如果此方法在自定义对象中未被覆盖，`toString()` 才会达到预想的效果，事实上，大部分引用类型比如 `Array、Date、RegExp` 等都重写了 `toString()` 方法。
+
+所以：调用 `Object` 原型上未被覆盖的 `toString()` 方法，使用 `call` 来改变 `this` 指向，就能获取准确的引用类型。
+
+   `Object.prototype.toString.call(target)`
+
 ##### 1. 判断引用类型
+
+通过 `typeof` 准确的判断是否是引用类型：
+
+   ```js
+   
+   if (target === null || (typeof target !== 'object' && typeof target !== 'function')) {
+     return target
+   }
+   
+   ```
 
 ##### 2. 可继续遍历的类型
 
+1. 上面我们已经考虑的 `object、array` 都属于可以继续遍历的类型，因为它们内存都还可以存储其他数据类型的数据，另外还有 `Map，Set` 等都是可以继续遍历的类型，这里我们只考虑这四种，如果你有兴趣可以继续探索其他类型。
+
+2. `Map，Set` 不能像数组对象一样增加属性，也不能使用 `for in` 遍历，所以：克隆 `Map，Set`：
+
+```js
+
+const getType = (target) => {
+  return Object.prototype.toString().call(target)
+}
+
+// set
+if (getType(target) === '[object Set]') {
+  target.forEach(item => cloneTarget.add(cloneDeep(item, map)))
+}
+
+// map，key可以为对象
+if (getType(target) === '[object Map]') {
+  target.forEach((item, key) => cloneTarget.set(cloneDeep(key, map), cloneDeep(item, map)))
+}
+
+```
+
 ##### 3. 不可继续遍历的类型
 
-###### 1. 克隆Symbol类型
+对于 `Bool、Number、String、String、Date、Error`、`Symbol`、正则、函数这些不可以继续遍历。
 
-###### 2. 克隆正则
+###### 1. `Bool、Number、String、String、Date、Error`
 
-###### 3. 克隆函数
+这几种类型我们都可以直接用构造函数和原始数据创建一个新对象。
+
+###### 2. 克隆Symbol类型
+
+###### 3. 克隆正则
+
+###### 4. 克隆函数
 
 ```js
 
