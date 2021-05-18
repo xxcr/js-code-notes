@@ -268,6 +268,7 @@ obj1 = null // 将obj1进行释放
 
 ```js
 
+// 获取数据类型方法
 const getType = (target) => {
   return Object.prototype.toString().call(target)
 }
@@ -297,6 +298,45 @@ if (getType(target) === '[object Map]') {
 ###### 3. 克隆正则
 
 ###### 4. 克隆函数
+
+1. 区分箭头函数和普通函数：通过 `prototype` ，箭头函数是没有 `prototype` 的。
+
+2. 克隆箭头函数：直接使用 `eval` 和函数字符串来重新生成一个箭头函数，注意这种方法是不适用于普通函数的。
+
+3. 克隆普通函数：分别使用正则取出函数体和函数参数，然后使用 `new Function ([arg1[, arg2[, ...argN]],] functionBody)` 构造函数重新构造一个新的函数。
+
+4. 代码：
+
+    ```js
+
+    // 克隆函数方法
+    function cloneFunction(func) {
+      const bodyReg = /(?<={)(.|\n)+(?=})/m
+      const paramReg = /(?<=\().+(?=\)\s+{)/
+      const funcString = func.toString()
+
+      if (func.prototype) {
+          console.log('普通函数')
+          const param = paramReg.exec(funcString)
+          const body = bodyReg.exec(funcString)
+          if (body) {
+            console.log('匹配到函数体：', body[0])
+            if (param) {
+              const paramArr = param[0].split(',')
+              console.log('匹配到参数：', paramArr)
+              return new Function(...paramArr, body[0])
+            } else {
+              return new Function(body[0]);
+            }
+          } else {
+            return null;
+          }
+      } else {
+        return eval(funcString);
+      }
+    }
+
+    ```
 
 ```js
 
