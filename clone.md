@@ -173,7 +173,7 @@ const cloneDeep = (target) => {
       if (typeof target === 'object' && target !== null) { // 对象，数组，但不为null
         const cloneTarget = Array.isArray(target) ? [] : {}
 
-        // 循环引用
+        // 解决循环引用
         if (map.get(target)) return map.get(target)
         map.set(target, cloneTarget)
 
@@ -258,6 +258,7 @@ obj1 = null // 将obj1进行释放
 
    ```js
    
+   // 基本类型直接返回
    if (target === null || (typeof target !== 'object' && typeof target !== 'function')) {
      return target
    }
@@ -308,7 +309,7 @@ if (getType(target) === '[object Map]') {
 3. 实现：
 
     ```js
-    // Bool、Number、String、Date、Error对象
+    // Bool、Number、String、Date、Error包装器对象
     let otherObj = [
       '[object Boolean]',
       '[object Number]',
@@ -339,9 +340,44 @@ if (getType(target) === '[object Map]') {
 
     在非构造函数上下文中调用时， `Object` 和 `new Object()` 表现一致。
 
-5. 
+5. 实现：
+
+    ```js
+
+    // Symbol包装器对象
+    if (getType(target) === '[object Symbol]') {
+      return cloneSymbol(target)
+    }
+
+    // 克隆Symbol包装器对象方法
+    function cloneFunction(target) {
+      return Object(Symbol.prototype.valueOf.call(target))
+    }
+
+    ```
 
 ###### 3. 克隆正则
+
+1. 这位大佬写的很详细：[如何 clone 一个正则？](https://juejin.cn/post/6844903775384125448)
+
+2. 实现：
+
+    ```js
+
+    // 正则
+    if (getType(target) === '[object Symbol]') {
+      return cloneSymbol(target)
+    }
+
+    // 克隆正则方法
+    function cloneReg (target) {
+      const reFlags = /\w*$/
+      const result = new target.constructor(target.source, reFlags.exec(target))
+      result.lastIndex = target.lastIndex
+      return result
+    }
+
+    ```
 
 ###### 4. 克隆函数
 
@@ -351,7 +387,7 @@ if (getType(target) === '[object Map]') {
 
 3. 克隆普通函数：分别使用正则取出函数体和函数参数，然后使用 `new Function ([arg1[, arg2[, ...argN]],] functionBody)` 构造函数重新构造一个新的函数。
 
-4. 代码：
+4. 实现：
 
     ```js
     
@@ -389,80 +425,6 @@ if (getType(target) === '[object Map]') {
 
     ```
 
-```js
-
-const cloneDeep = (target, map = new WeakMap()) => {
-  // Map 强引用，需要手动清除属性才能释放内存。
-  // WeakMap 弱引用，随时可能被垃圾回收，使内存及时释放，是解决循环引用的不二之选。
-
-  // null 和 undefined
-  if (target === null || target === undefined) return target
-  // 基本类型
-  if (typeof target !== 'object' && typeof target !== 'function') return target
-  // Date和RegExp对象
-  if (target instanceof Date) return new Date(target)
-  if (target instanceof RegExp) return new RegExp(target)
-  // 函数和箭头函数
-  if (typeof target === 'function') return handleFunction(target)
-
-  // 对象
-  // 循环引用
-  if (map.get(target)) return map.get(target)
-  let cloneObj = new target.constructor()
-  map.set(target, cloneObj)
-
-  // set
-  if (getType(target) === '[object Set]') {
-    target.forEach(item => cloneObj.add(cloneDeep(item, map)))
-  }
-  // map，key可以为对象
-  if (getType(target) === '[object Map]') {
-    target.forEach((item, key) => cloneObj.set(cloneDeep(key, map), cloneDeep(item, map)))
-  }
-
-  // 其他对象
-  // Set和Map不能使用for in遍历
-  for (let key in target) {
-    if (target.hasOwnProperty(key)) {
-      cloneObj[key] = cloneDeep(target[key], map)
-    }
-  }
-}
-
-// 拷贝函数的方法
-const handleFunction = (target) => {
-  // 箭头函数
-  if (!target.prototype) return target
-
-  const bodyReg = /(?<={)(.|\n)+(?=})/m
-  const paramReg = /(?<=\().+(?=\)\s+{)/
-
-  const funcString = target.toString()
-  // 分别匹配 函数参数 和 函数体
-  const param = paramReg.exec(funcString)
-  const body = bodyReg.exec(funcString)
-  if (!body) return null
-  if (param) {
-    const paramArr = param[0].split(',')
-    return new Function(...paramArr, body[0])
-  } else {
-    return new Function(body[0])
-  }
-}
-
-
-// todo 这个方法可以复制函数，待验证
-if (target instanceof Function) {
-  return function () {
-    return target.apply(this, [...arguments]);
-  };
-}
-
-const getType = (target) => {
-  return Object.prototype.toString().call(target)
-}
-
-```
 
 #### todo 性能优化
 
