@@ -415,13 +415,13 @@ if (getType(target) === '[object Map]') {
               console.log('匹配到参数：', paramArr)
               return new Function(...paramArr, body[0])
             } else {
-              return new Function(body[0]);
+              return new Function(body[0])
             }
           } else {
-            return null;
+            return null
           }
       } else {
-        return eval(funcString);
+        return eval(funcString)
       }
     }
 
@@ -466,13 +466,13 @@ function cloneFunction (func) {
           console.log('匹配到参数：', paramArr)
           return new Function(...paramArr, body[0])
         } else {
-          return new Function(body[0]);
+          return new Function(body[0])
         }
       } else {
-        return null;
+        return null
       }
   } else {
-    return eval(funcString);
+    return eval(funcString)
   }
 }
 
