@@ -295,7 +295,7 @@ if (getType(target) === '[object Map]') {
 
 ###### 1. `Bool、Number、String、Date、Error`包装器对象
 
-这里指的是下面这种：
+1. 这里指的是下面这种：
 
     ```js
 
@@ -303,23 +303,25 @@ if (getType(target) === '[object Map]') {
 
     ```
 
-这几种类型我们都可以直接用构造函数和原始数据创建一个新对象。
+2. 这几种类型我们都可以直接用构造函数和原始数据创建一个新对象。
 
-```js
-// Bool、Number、String、Date、Error对象
-let otherObj = [
-  '[object Boolean]',
-  '[object Number]',
-  '[object String]',
-  '[object Date]',
-  '[object Error]'
-]
+3. 实现：
 
-if (otherObj.includes(getType(target))) {
-  return new cloneTarget(target)
-}
+    ```js
+    // Bool、Number、String、Date、Error对象
+    let otherObj = [
+      '[object Boolean]',
+      '[object Number]',
+      '[object String]',
+      '[object Date]',
+      '[object Error]'
+    ]
 
-```
+    if (otherObj.includes(getType(target))) {
+      return new cloneTarget(target)
+    }
+
+    ```
 
 ###### 2. 克隆Symbol包装器对象
 
@@ -335,7 +337,9 @@ if (otherObj.includes(getType(target))) {
     -   否则，它将返回一个和给定的值相对应的类型的对象。
     -   如果给定值是一个已经存在的对象，则会返回这个已经存在的值（相同地址）。
 
-在非构造函数上下文中调用时， `Object` 和 `new Object()` 表现一致。
+    在非构造函数上下文中调用时， `Object` 和 `new Object()` 表现一致。
+
+5. 
 
 ###### 3. 克隆正则
 
