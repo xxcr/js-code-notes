@@ -233,7 +233,11 @@ obj1 = null // 将obj1进行释放
 
 2. 我们不能再像上面那样 `const cloneTarget = Array.isArray(target) ? [] : {}` 获取它们的初始化数据。可以通过拿到 `constructor` 的方式来通用的获取。
 
-    `const cloneTarget = new target.constructor()`
+    ```js
+    
+    const cloneTarget = new target.constructor()
+
+    ```
 
     `const target = {}` 就是 `const target = new Object()` 的语法糖。
     这种方法还有一个好处：因为我们还使用了原对象的构造方法，所以它可以保留对象原型上的数据，如果直接使用普通的{}，那么原型必然是丢失了的。
@@ -287,13 +291,51 @@ if (getType(target) === '[object Map]') {
 
 ##### 3. 不可继续遍历的类型
 
-对于 `Bool、Number、String、String、Date、Error`、`Symbol`、正则、函数这些不可以继续遍历。
+对于 `Bool、Number、String、Date、Error`、`Symbol`、正则、函数这些不可以继续遍历。
 
-###### 1. `Bool、Number、String、String、Date、Error`
+###### 1. `Bool、Number、String、Date、Error`包装器对象
+
+这里指的是下面这种：
+
+    ```js
+
+    console.log(typeof new Number(1)) // object
+
+    ```
 
 这几种类型我们都可以直接用构造函数和原始数据创建一个新对象。
 
-###### 2. 克隆Symbol类型
+```js
+// Bool、Number、String、Date、Error对象
+let otherObj = [
+  '[object Boolean]',
+  '[object Number]',
+  '[object String]',
+  '[object Date]',
+  '[object Error]'
+]
+
+if (otherObj.includes(getType(target))) {
+  return new cloneTarget(target)
+}
+
+```
+
+###### 2. 克隆Symbol包装器对象
+
+1. 关于`Symbol`，看[Symbol](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol)
+
+2. `Symbol.prototype.valueOf()`，返回当前 `symbol` 对象所包含的 `symbol` 原始值。
+
+3. [聊一聊valueOf和toString](https://juejin.cn/post/6844903967097356302)
+
+4. `Object` 构造函数将给定的值包装为一个新对象。
+
+    -   如果给定的值是 null 或 undefined, 它会创建并返回一个空对象。
+    -   否则，它将返回一个和给定的值相对应的类型的对象。
+    -   如果给定值是一个已经存在的对象，则会返回这个已经存在的值（相同地址）。
+
+在非构造函数上下文中调用时， `Object` 和 `new Object()` 表现一致。
 
 ###### 3. 克隆正则
 
@@ -308,6 +350,11 @@ if (getType(target) === '[object Map]') {
 4. 代码：
 
     ```js
+    
+    // 克隆函数
+    if ('[object Function]') {
+      return cloneFunction(target)
+    }
 
     // 克隆函数方法
     function cloneFunction(func) {
