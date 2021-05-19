@@ -235,6 +235,7 @@ obj1 = null // 将obj1进行释放
 
     ```js
     
+    // 获取初始化数据
     const cloneTarget = new target.constructor()
 
     ```
@@ -309,6 +310,7 @@ if (getType(target) === '[object Map]') {
 3. 实现：
 
     ```js
+
     // Bool、Number、String、Date、Error包装器对象
     let otherObj = [
       '[object Boolean]',
@@ -392,12 +394,12 @@ if (getType(target) === '[object Map]') {
     ```js
     
     // 克隆函数
-    if ('[object Function]') {
+    if (getType(target) === '[object Function]') {
       return cloneFunction(target)
     }
 
     // 克隆函数方法
-    function cloneFunction(func) {
+    function cloneFunction (func) {
       const bodyReg = /(?<={)(.|\n)+(?=})/m
       const paramReg = /(?<=\().+(?=\)\s+{)/
       const funcString = func.toString()
@@ -425,6 +427,118 @@ if (getType(target) === '[object Map]') {
 
     ```
 
+#### 最终代码
+
+```js
+
+// 获取数据类型方法
+function getType (target) => {
+  return Object.prototype.toString().call(target)
+}
+
+// 克隆Symbol包装器对象方法
+function cloneFunction(target) {
+  return Object(Symbol.prototype.valueOf.call(target))
+}
+
+// 克隆正则方法
+function cloneReg (target) {
+  const reFlags = /\w*$/
+  const result = new target.constructor(target.source, reFlags.exec(target))
+  result.lastIndex = target.lastIndex
+  return result
+}
+
+// 克隆函数方法
+function cloneFunction (func) {
+  const bodyReg = /(?<={)(.|\n)+(?=})/m
+  const paramReg = /(?<=\().+(?=\)\s+{)/
+  const funcString = func.toString()
+
+  if (func.prototype) {
+      console.log('普通函数')
+      const param = paramReg.exec(funcString)
+      const body = bodyReg.exec(funcString)
+      if (body) {
+        console.log('匹配到函数体：', body[0])
+        if (param) {
+          const paramArr = param[0].split(',')
+          console.log('匹配到参数：', paramArr)
+          return new Function(...paramArr, body[0])
+        } else {
+          return new Function(body[0]);
+        }
+      } else {
+        return null;
+      }
+  } else {
+    return eval(funcString);
+  }
+}
+
+const cloneDeep = (target, map = new WeakMap()) => {
+  // Map 强引用，需要手动清除属性才能释放内存。
+  // WeakMap 弱引用，随时可能被垃圾回收，使内存及时释放，是解决循环引用的不二之选。
+
+  // 基本类型直接返回
+  if (target === null || (typeof target !== 'object' && typeof target !== 'function')) {
+    return target
+  }
+
+  // 解决循环引用
+  if (map.get(target)) return map.get(target)
+  map.set(target, cloneTarget)
+
+  // 获取初始化数据
+  const cloneTarget = new target.constructor()
+
+  // Bool、Number、String、Date、Error包装器对象
+  let otherObj = [
+    '[object Boolean]',
+    '[object Number]',
+    '[object String]',
+    '[object Date]',
+    '[object Error]'
+  ]
+  if (otherObj.includes(getType(target))) {
+    return new cloneTarget(target)
+  }
+
+  // Symbol包装器对象
+  if (getType(target) === '[object Symbol]') {
+    return cloneSymbol(target)
+  }
+
+  // 正则
+  if (getType(target) === '[object Symbol]') {
+    return cloneSymbol(target)
+  }
+
+  // 克隆函数
+  if (getType(target) === '[object Function]') {
+    return cloneFunction(target)
+  }
+
+  // set
+  if (getType(target) === '[object Set]') {
+    target.forEach(item => cloneTarget.add(cloneDeep(item, map)))
+  }
+
+  // map，key可以为对象
+  if (getType(target) === '[object Map]') {
+    target.forEach((item, key) => cloneTarget.set(cloneDeep(key, map), cloneDeep(item, map)))
+  }
+
+  // 普通对象和数组
+  // Set和Map不能使用for in遍历
+  for (let key in target) {
+    if (target.hasOwnProperty(key)) {
+      cloneObj[key] = cloneDeep(target[key], map)
+    }
+  }
+}
+
+```
 
 #### todo 性能优化
 
