@@ -122,7 +122,13 @@ __将构造函数的作用域赋给新对象__ ，就是给这个新对象构造
 
     ```
 
-3. 
+3. 简化：用 `Object.create()` 来简化上面两步：
+
+    ```js
+
+    let obj = obj = Object.create(constr.prototype)
+
+    ```
 
 
 #### 第三步
