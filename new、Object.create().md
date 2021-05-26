@@ -84,7 +84,7 @@
 
 #### 第一步
 
-创建一个新的空的对象。
+__创建一个新的空的对象__。
 
     ```js
 
@@ -130,10 +130,44 @@ __将构造函数的作用域赋给新对象__ ，就是给这个新对象构造
 
     ```
 
+    使用 `Object.create(object, objectProps)` 这种方法，第一个参数就是要创建的对象的原型
+
 
 #### 第三步
 
+__执行构造函数中的代码（为这个新对象添加属性）__。使用`apply` 实现：
+
+    ```js
+
+    constr.apply(obj, arguments)
+
+    ```
+
 #### 第四步
+
+__如果这个函数有返回值且返回值是对象，则返回；否则，就会默认返回新对象__
+
+1. 首先，需要获取这个返回值：
+
+    ```js
+
+    let res = constr.apply(obj, arguments)
+
+    ```
+
+2. 从上面得出：`new` 关键字，如果返回的是 `undefined，null` 以及基本类型的时候，都会返回新的对象；而只有返回对象的时候，才会返回构造函数的返回值。
+
+所以：判断 `res` 是不是 `object` 类型，如果是 `object` 类型，那么就返回 `res`，否则，返回 `obj`。
+
+    ```js
+
+    return res instanceof Object ? res : obj
+
+    ```
+
+> 使用 `res instanceof Object` 就能判断 `res` 是否为对象类型。
+> 以前都是用 `typeOf()` 蠢办法：`target !== null && (typeof target === 'object' || typeof target === 'function')`。
+
 
 #### 最终代码
 
