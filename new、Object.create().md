@@ -234,7 +234,22 @@ Object.create(proto, [propertiesObject])
 
 ### 实现
 
-思路很简单：
+思路很简单：创建一个新对象，将传入的第一个参数作为这个对象的原型，如果发现传递了第二个参数，通过 `Object.defineProperties` 为创建的对象设置 `key、value`，最后返回创建的对象即可。
+
+1. 我自己的实现，感觉没什么问题：（todo：待纠正）
+
+    ```js
+
+    Object.myCreate = function (proto, propertyObject = undefined) {
+      let obj = {}
+      obj.__proto__ = proto
+      if (propertyObject !== undefined) {
+        Object.defineProperties(obj, propertyObject)
+      }
+      return obj
+    }
+
+    ```
 
 ## 参考文献
 
