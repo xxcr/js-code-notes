@@ -251,8 +251,34 @@ Object.create(proto, [propertiesObject])
 
     ```
 
+2. 源码：定义一个空的构造函数，然后指定构造函数的原型对象，通过 `new` 运算符创建一个空对象。
+
+    ```js
+
+    Object.myCreate = function (proto, propertyObject = undefined) {
+      if (propertyObject === null) {
+        // 这里没有判断propertyObject是否是原始包装对象
+        throw 'TypeError'
+      } else {
+        function F() {}
+        F.prototype = proto
+        const obj = new F()
+        if (propertyObject !== undefined) {
+          Object.defineProperties(obj, propertyObject)
+        }
+        if (proto === null) {
+          // 创建一个没有原型对象的对象，Object.create(null)
+          obj.__proto__ = null
+        }
+        return obj
+      }
+    }
+
+    ```
+
 ## 参考文献
 
 1. [前端面试题——自己实现new](https://zhuanlan.zhihu.com/p/84605717)
 2. [详解 JS 中 new 调用函数原理](https://segmentfault.com/a/1190000015424508)
 3. [Object.create()、new Object()和{}的区别](https://juejin.cn/post/6844903917835436045)
+4. [Object.create 实现原理](https://juejin.cn/post/6844904174983872519)
