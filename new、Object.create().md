@@ -185,6 +185,57 @@ function myNew () {
 测试：`myNew(Test, 'xuxu')` 和上面一致。
 
 
+## new运算符
+
+`Object.create()` 方法创建一个新对象，使用现有的对象来提供新创建的对象的 `__proto__`
+
+### 语法
+
+```js
+
+Object.create(proto, [propertiesObject])
+
+```
+
+1. `proto` 必填参数，是新对象的原型对象。
+
+   > 注意，如果这个参数是null，那新对象就彻彻底底是个空对象，没有继承 `Object.prototype` 上的 任何属性和方法，如 `hasOwnProperty()、toString()` 等。
+
+2. `propertiesObject` 是可选参数。要定义其可枚举属性或修改的属性描述符的对象。对象中存在的属性描述符主要有两种：__数据描述符__ 和 __访问器描述符__ 。
+
+    > 更多的请移步：[关于Object.defineProperty() 和 Object.defineProperties()](https://juejin.cn/post/6861089494158802957)
+
+    ```js
+
+    let xx = Object.create({a: 1}, {
+      b: {
+          value: 2,
+          writable: false,
+          configurable: true
+      }
+    })
+
+    console.log(xx) // {b: 2}
+    console.log(xx.__proto__) // {a: 1}  新对象xx的__proto__指向{a: 1}
+    
+    xx.b = 77;
+    // throws an error in strict mode
+    
+    console.log(xx.b);
+    // expected output: 2
+
+    ```
+
+### 用途
+
+最大的用途就是实现js的继承：__原型式继承__ 和 __寄生组合继承__
+
+> 更多的请移步以前的文章：[JavaScript的继承详解（ES5和ES6）--每天进步一点点](https://juejin.cn/post/6960310756885659661)
+
+### 实现
+
+思路很简单：
+
 ## 参考文献
 
 1. [前端面试题——自己实现new](https://zhuanlan.zhihu.com/p/84605717)
