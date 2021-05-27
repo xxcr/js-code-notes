@@ -41,7 +41,7 @@
 
     ```
 
-    可以看出，`return` 之前的工作都白做了，最后返回 return 后面的对象。
+    可以看出，`return` 之前的工作都白做了，最后返回 `return` 后面的对象。
 
 3. `return` 基本类型数据
 
@@ -185,7 +185,7 @@ function myNew () {
 测试：`myNew(Test, 'xuxu')` 和上面一致。
 
 
-## new运算符
+## Object.create()
 
 `Object.create()` 方法创建一个新对象，使用现有的对象来提供新创建的对象的 `__proto__`
 
