@@ -276,6 +276,14 @@ Object.create(proto, [propertiesObject])
 
     ```
 
+    > 个人理解：`if (proto === null)` 这个没有必要，因为，如果 `proto = null`，上面这句 `F.prototype = proto` ，`obj` 的原型对象已经是 `null` 了。
+
+## Object.create()、new Object()和{}的区别
+ 
+1. `new Object()` 和 `{}` 没有什么区别，创建的新对象的 `__proto__` 都指向 `Object.prototype`。
+
+2. `Object.create(proto, [propertiesObject])` 创建的对象的原型取决于 `proto` ， `proto` 为 `null` ，新对象是空对象，没有原型，不继承任何对象； `proto` 为指定对象，新对象的原型指向指定对象，继承指定对象
+
 ## 参考文献
 
 1. [前端面试题——自己实现new](https://zhuanlan.zhihu.com/p/84605717)
