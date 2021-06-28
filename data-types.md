@@ -44,6 +44,12 @@
 4. 如果一个是对象，另一个是数值或字符串，把对象转换成基础类型的值再比较。对象转换成基础类型，利用它的toString或者valueOf方法。js核心内置类，会尝试valueOf先于toString；例外的是Date，Date利用的是toString转换。
 5. 其他任何组合，不相等
 
+##### Object.is()
+
+1. 如何处理 NaN, -0 和 +0。
+2. 图解：
+
+    ![== 和 === 和 Object.is()](image/equality-comparison.png)
 
 ## 判断
 ### 1. typeof
