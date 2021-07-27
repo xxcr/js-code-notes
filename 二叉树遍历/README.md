@@ -62,6 +62,10 @@ function TreeNode(val, left, right) {
 
 
 
+[LeetCode题目](https://link.juejin.cn/?target=https%3A%2F%2Fleetcode-cn.com%2Fproblems%2Fbinary-tree-preorder-traversal%2F)
+
+
+
 再啰嗦一下定义：对于二叉树中的任意一个节点，先打印该节点，然后是它的左子树，最后右子树。遍历左子树的时候，又是先遍历左子树的根节点，然后左子树的左子树，左子树的右子树…….
 
 
@@ -79,6 +83,18 @@ function TreeNode(val, left, right) {
 根据定义直接写出递归实现：
 
 ```js
+const preorderTraversal = (root) => {
+    let res = []
+    const traversal = (node) => {
+        if (node) {
+            res.push(node.val)
+            traversal(node.left)
+            traversal(node.right)
+        }
+    }
+    traversal(root)
+    return res
+}
 ```
 
 
