@@ -133,11 +133,11 @@
    **In-place**: 占用常数内存，不占用额外内存
    **Out-place**: 占用额外内存
 
-![inde](.\images\inde.png)
+![inde](./images/inde.png)
 
 2. 算法分类：
 
-   ![categories](.\images\categories.png)
+   ![categories](./images/categories.png)
 
 
 
@@ -149,7 +149,7 @@
 
 有N个数字的数组，进行N轮排序，在每一轮中，从前往后以此比较两两相邻的数字，每次比较后，都把大的往后放，一轮下来，最大的数会被推到数组最后。就好像气泡升至表面一样，冒泡排序因此得名。
 
-![bubble](D:\github\xxcr\js-code-notes\数组排序\images\bubble.gif) 
+![bubble](./images/bubble.gif) 
 
 ### 代码实现
 
