@@ -4,8 +4,6 @@
 
 ## 写在前面
 
-
-
 本文主要是介绍JS实现二叉树的深度优先（前序，中序，后序）遍历和广度优先遍历算法，每种遍历法都有递归和非递归两种思路，也比较详细的介绍了 `leetCode` 上的[锯齿形层序遍历](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/)算法。另外简单的写了下求二叉树的深度，求二叉树的宽度两种算法。
 
 
@@ -32,8 +30,6 @@ function TreeNode(val, left, right) {
 
 ## 二叉树的遍历方式
 
-
-
 1. 深度优先遍历(Depth First Search)：沿着树的深度遍历树的节点，尽可能深的搜索树的分支。
 
    又分为以下三种方式：
@@ -52,15 +48,11 @@ function TreeNode(val, left, right) {
 
 ## 深度优先遍历
 
-
-
 再啰嗦一下定义：沿着树的深度遍历树的节点，尽可能深的搜索树的分支。
 
 
 
 ### 前序遍历
-
-
 
 [LeetCode题目](https://link.juejin.cn/?target=https%3A%2F%2Fleetcode-cn.com%2Fproblems%2Fbinary-tree-preorder-traversal%2F)
 
@@ -77,8 +69,6 @@ function TreeNode(val, left, right) {
 
 
 #### 递归实现
-
-
 
 根据定义直接写出递归实现：
 
@@ -99,11 +89,7 @@ const preorderTraversal = (root) => {
 
 
 
-
-
 #### 迭代 + 栈实现
-
-
 
 实际上递归就是使用了栈，所以我们可以使用栈来模拟递归。
 
@@ -119,6 +105,8 @@ const preorderTraversal = (root) => {
 4. 将栈顶的节点（可能是左子树的节点）出栈，值放入结果数组中。
 5. 继续上面的步骤3。.........
 
+依次循环出栈遍历入栈，直到栈为空，遍历完成
+
 
 
 从https://www.jianshu.com/p/1e6f0228211e嫖来的图，帮助理解：
@@ -130,13 +118,30 @@ const preorderTraversal = (root) => {
 代码：
 
 ```js
+const preorderTraversal = (root) => {
+    let stack = []
+    let res = []
+    
+    if (root) {
+        stack.push(root)
+    }
+    while (stack.length) {
+        const node = stack.pop()
+        res.push(node.val)
+        if (node.right) {
+            node.right && stack.push(node.right)
+        }
+        if (node.left) {
+            stack.push(node.left)
+        }
+    }
+    return res
+}
 ```
 
 
 
 ### 中序遍历
-
-
 
 再啰嗦一下定义：对于二叉树中的任意一个节点，先打印它的左子树，然后是该节点，最后右子树。
 
@@ -150,8 +155,6 @@ const preorderTraversal = (root) => {
 
 #### 递归实现
 
-
-
 根据定义直接写出递归实现：
 
 ```js
@@ -162,9 +165,14 @@ const preorderTraversal = (root) => {
 
 #### 迭代 + 栈实现
 
-
-
 思路：
+
+1. 用一个变量存放当前访问的节点。
+2. 如果节点存在，就把他压入栈中，然后将左子节点作为当前访问节点进行下一轮循环。
+3. 如果节点不存在，则将栈顶的节点出栈，值放入结果数组中。
+4. 如果其存在右子节点，则将右子节点作为当前访问节点进行下一轮循环。
+
+依次循环出栈遍历入栈，直到栈为空，遍历完成
 
 
 
@@ -183,8 +191,6 @@ const preorderTraversal = (root) => {
 
 ### 后序遍历
 
-
-
 再啰嗦一下定义：对于二叉树中的任意一个节点，先打印它的左子树，然后是右子树，最后该节点。
 
 
@@ -197,8 +203,6 @@ const preorderTraversal = (root) => {
 
 #### 递归实现
 
-
-
 根据定义直接写出递归实现：
 
 ```js
@@ -208,8 +212,6 @@ const preorderTraversal = (root) => {
 
 
 #### 迭代 + 栈实现
-
-
 
 思路：
 
@@ -230,15 +232,11 @@ const preorderTraversal = (root) => {
 
 ### 总结
 
-
-
 关于二叉树的前序、中序、后续遍历，使用递归的方法不用多说，迭代方法，通过对`栈`的应用，对节点不同顺序的压入栈中，从而实现不同顺序的遍历。
 
 
 
 ## 广度优先遍历
-
-
 
 再啰嗦一下定义：按照树的层次，每层从左至右依次遍历。
 
@@ -254,15 +252,11 @@ const preorderTraversal = (root) => {
 
 ## 锯齿形层序遍历
 
-
-
 再啰嗦一下定义：先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行。
 
 
 
 ## 补充两个算法
-
-
 
 这里只是简单写了一下。
 
@@ -270,15 +264,11 @@ const preorderTraversal = (root) => {
 
 ### 1. 求二叉树的深度
 
-
-
 定义：从根结点到叶结点依次经过的结点（含根、叶结点）形成树的一条路径，最长路径的长度为树的深度。
 
 
 
 #### 递归实现
-
-
 
 思路：分别计算左子树的深度和右字数的深度，然后选出两个值中的较大值。
 
@@ -292,8 +282,6 @@ const preorderTraversal = (root) => {
 
 
 ### 2. 求二叉树的宽度
-
-
 
 定义：二叉树各层结点个数的最大值。
 
