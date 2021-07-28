@@ -1,4 +1,4 @@
-主要介绍JS实现二叉树的深度优先（前序，中序，后序）遍历和广度优先遍历算法，每种遍历法都有递归和非递归两种思路，也比较详细的介绍了 `leetCode` 上的锯齿形层序遍历算法，简单的写了下求二叉树的深度，求二叉树的宽度算法
+1. 1. 主要介绍JS实现二叉树的深度优先（前序，中序，后序）遍历和广度优先遍历算法，每种遍历法都有递归和非递归两种思路，也比较详细的介绍了 `leetCode` 上的锯齿形层序遍历算法，简单的写了下求二叉树的深度，求二叉树的宽度算法
 
       
 
@@ -64,7 +64,7 @@
 
       看图基本就懂啦：
 
-      ![preorderTraversal1](./images/preorderTraversal1.png)
+      ![preorderTraversal1](.\images\preorderTraversal1.png)
 
       
 
@@ -111,7 +111,7 @@
 
       从https://www.jianshu.com/p/1e6f0228211e嫖来的图，帮助理解：
 
-      ![preorderTraversal2](./images/preorderTraversal2.png)
+      ![preorderTraversal2](.\images\preorderTraversal2.png)
 
       
 
@@ -149,7 +149,7 @@
 
       还是看图就懂：
 
-      ![inorderTraversal1](./images/inorderTraversal1.png)
+      ![inorderTraversal1](.\images\inorderTraversal1.png)
 
       
 
@@ -176,6 +176,35 @@
 
       #### 迭代 + 栈实现
 
+      
+
+      从https://www.jianshu.com/p/1e6f0228211e嫖来的图，帮助理解：
+
+      ![inorderTraversal2](.\images\inorderTraversal2.png)
+
+      
+
+      ##### 第一种方法
+
+      这种方法思路比较简单：
+
+      1. 如果存在左子节点，依次入栈。
+      2. 如果左子节点不存在，右子节点存在，输出当前节点，去右子节点中迭代。
+      3. 如果左右节点都不存在，输出当前节点，栈顶元素出栈，也就是回退到上一层，此时置空左子节点，防止while循环重复进入。
+
+      
+
+      代码：
+
+      ```js
+      const inorderTraversal = (root) => {
+      }
+      ```
+
+      
+
+      ##### 第二种方法
+
       思路：
 
       1. 用一个变量存放当前访问的节点。
@@ -184,12 +213,6 @@
       4. 将右子节点作为当前访问节点进行下一轮循环。
 
       依次循环，直到栈为空，遍历完成
-
-      
-
-      从https://www.jianshu.com/p/1e6f0228211e嫖来的图，帮助理解：
-
-      ![inorderTraversal2](./images/inorderTraversal2.png)
 
       
 
@@ -250,19 +273,45 @@
 
       #### 迭代 + 栈实现
 
-      思路：
+      从https://www.jianshu.com/p/1e6f0228211e嫖来的图，帮助理解：
+
+      ![postorderTraversal2](.\images\postorderTraversal2.png)
 
       
 
-      从https://www.jianshu.com/p/1e6f0228211e嫖来的图，帮助理解：
+      ##### 第一种：前序遍历的逆向思维
 
-      ![postorderTraversal2](./images/postorderTraversal2.png)
+      思路：
+
+      1. 和前序遍历思路一样，不过入栈顺序改为当前节点，左子节点，右子节点。
+      2. 最后用数组`reverse`反转方法，输出就变成了左子节点，右子节点，当前节点
 
       
 
       代码：
 
       ```js
+      const postorderTraversal = (root) => {
+      }
+      ```
+
+      
+
+      ##### 第二种：中序遍历第一种方法的思路
+
+      思路：
+
+      1. 如果存在左子节点，依次入栈。
+      2. 如果左子节点不存在，右子节点存在，右子节点入栈 ，去右子节点中迭代。
+      3. 如果左右节点都不存在，输出当前节点，栈顶元素出栈，也就是回退到上一层，此时置空左右子节点，防止while循环重复进入。
+
+      
+
+      代码：
+
+      ```js
+      const postorderTraversal = (root) => {
+      }
       ```
 
       
@@ -327,3 +376,4 @@
       1. [JS实现二叉树的前序、中序、后续、层序遍历](https://juejin.cn/post/6844904063650234375)
       2. [JavaScript解：前序遍历二叉树](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/solution/javascriptjie-qian-xu-bian-li-er-cha-shu-by-user77/)
       3. [JavaScript实现二叉树的遍历](https://www.jianshu.com/p/1e6f0228211e)
+      4. [二叉树前中后序遍历非递归实现（JavaScript）](https://juejin.cn/post/6844904038060785671)
