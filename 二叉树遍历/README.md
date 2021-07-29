@@ -129,7 +129,7 @@
               const node = stack.pop()
               res.push(node.val)
               if (node.right) {
-                  node.right && stack.push(node.right)
+                  stack.push(node.right)
               }
               if (node.left) {
                   stack.push(node.left)
@@ -208,15 +208,16 @@
                   root.left = null
               }
           }
+          return res
       }
       ```
+
       
-      
-      
+
       ##### 第二种方法
-      
+
       思路：
-      
+
       1. 用一个变量存放当前访问的节点。
       2. 如果节点存在，就把他压入栈中，然后将左子节点作为当前访问节点进行下一轮循环。
       3. 如果节点不存在，则将栈顶的节点出栈，值放入结果数组中，将右子节点作为当前访问节点进行下一轮循环。
@@ -246,15 +247,15 @@
           return res
       }
       ```
+
       
-      
-      
+
       ### 后序遍历
-      
+
       再啰嗦一下定义：对于二叉树中的任意一个节点，先打印它的左子树，然后是右子树，最后该节点。
+
       
-      
-      
+
       还是看图就懂：
       
       ![postorderTraversal1](./images/postorderTraversal1.png)
@@ -277,44 +278,63 @@
           return res
       }
       ```
+
       
-      
-      
+
       #### 迭代 + 栈实现
-      
+
       
       
       ##### 第一种：前序遍历的逆向思维
-
+      
       思路：
-
+      
       1. 和前序遍历思路一样，不过入栈顺序改为当前节点，左子节点，右子节点。
       2. 最后用数组`reverse`反转方法，输出就变成了左子节点，右子节点，当前节点
       
       
       
       从https://www.jianshu.com/p/1e6f0228211e嫖来的图，帮助理解：
-
-      ![postorderTraversal2](.\images\postorderTraversal2.png)
-
       
-
+      ![postorderTraversal2](.\images\postorderTraversal2.png)
+      
+      
+      
       代码：
-
+      
       ```js
       const postorderTraversal = (root) => {
+          let res = []
+          let stack = []
+      
+          if (root) {
+              stack.push(root)
+          }
+          while (stack.length) {
+              const node = stack.pop()
+              res.push(node.val)
+              node.left && stack.push(node.left)
+              node.right && stack.push(node.right)
+          }
+          return res.reverse()
       }
       ```
+
       
-      
-      
+
       ##### 第二种：中序遍历第一种方法的思路
-      
+
       思路：
-      
+
       1. 如果存在左子节点，依次入栈。
-      2. 如果左子节点不存在，右子节点存在，右子节点入栈 ，去右子节点中迭代。
-      3. 如果左右节点都不存在，输出当前节点，栈顶元素出栈，也就是回退到上一层，此时置空左右子节点，防止while循环重复进入。
+
+      2. 如果左子节点不存在，右子节点存在，该节点入栈 ，去右子节点中迭代。
+
+      3. 如果左右节点都不存在，输出当前节点，栈顶元素出栈，也就是当前节点的父节点。
+
+         如果父节点有左子节点，说明刚刚访问的是左子节点，置空，防止while循环重复进入，下次循环应该访问该右子节点。
+
+         如果没有左子节点，但有右子节点，说明刚刚访问的是右子节点，置空，防止while循环重复进入，下次循环就打印该节点。
 
       
 
@@ -322,6 +342,29 @@
 
       ```js
       const postorderTraversal = (root) => {
+          let res = []
+          let stack = []
+      
+          while (root || stack.length) {
+              if (root.left) {
+                  stack.push(root)
+                  root = root.left
+              } else if (root.right) {
+                  stack.push(root)
+                  root = root.right
+              } else {
+                  res.push(root.val)
+                  root = stack.pop()
+                  if (root.left) {
+                      root.left = null
+                      continue
+                  }
+                  if (root.right) {
+                      root.right = null
+                  }
+              }
+          }
+          return res
       }
       ```
       
@@ -364,15 +407,15 @@
       定义：从根结点到叶结点依次经过的结点（含根、叶结点）形成树的一条路径，最长路径的长度为树的深度。
       
       
-
-      #### 递归实现
-
-      思路：分别计算左子树的深度和右字数的深度，然后选出两个值中的较大值。
-
       
-
+      #### 递归实现
+      
+      思路：分别计算左子树的深度和右字数的深度，然后选出两个值中的较大值。
+      
+      
+      
       代码：
-
+      
       ```js
       ```
       
