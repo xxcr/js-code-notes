@@ -398,7 +398,7 @@ const postorderTraversal = (root) => {
 
    [2, 3],
 
-   [null, 4]
+   [4]
 
    ]
 
@@ -422,7 +422,68 @@ const postorderTraversal = (root) => {
 
 
 
+思路：
+
+1. 
+
+
+
+代码：
+
+```js
+const levelOrder = (root) => {
+    let res = []
+
+    const levelLoop = (node, level) => {
+        if (node) {
+            res[level] = res[level] || []
+            res[level].push(node.val)
+            levelLoop(node.left, ++level)
+            levelLoop(node.right, ++level)
+        }
+    }
+    levelLoop(root, 0)
+    return res
+}
+```
+
+
+
 #### 迭代 + 队列
+
+
+
+思路：使用队列来保存节点，每轮循环中，我们都取一层出来，将它们的左右孩子依次放入队列。
+
+
+
+代码： 
+
+```js
+const levelOrder = (root) => {
+    let res = []
+    let queue = []
+    let level = 0
+
+    if (root) {
+        queue.push(root)
+    }
+    while (queue.length) {
+        let n = queue.length
+        res[level] = []
+
+        for (let i = 0; i < n; i++) {
+            const node = queue.pop()
+            res[level].push(node.val)
+            // 从左往右入队
+            node.left && queue.unshift(node.left)
+            node.right && queue.unshift(node.right)
+        }
+        level++
+    }
+    return res
+}
+```
 
 
 
@@ -430,11 +491,40 @@ const postorderTraversal = (root) => {
 
 
 
+#### 迭代 + 队列
+
+
+
+思路：
+
+
+
+代码：
+
+```js
+const levelOrder = (root) => {
+    let res = []
+    let queue = []
+
+    if (root) {
+        queue.shift(root)
+    }
+    while (queue.length) {
+        const node = queue.pop()
+        res.push(node.val)
+        // 从左往右入队
+        node.left && queue.unshift(node.left)
+        node.right && queue.unshift(node.right)
+    }
+    return res
+}
+```
+
+
+
 #### 递归 + 队列
 
-
-
-#### 迭代 + 队列
+这个和 **迭代 + 队列** 差不多，只是用递归函数代替 `while` 循环
 
 
 
