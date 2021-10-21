@@ -567,6 +567,10 @@ const levelOrder = (root) => {
 代码：
 
 ```js
+const maxDepth = () => {
+    if (!root) return 0
+    return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1
+}
 ```
 
 
@@ -577,7 +581,9 @@ const levelOrder = (root) => {
 
 
 
-定义：二叉树各层结点个数的最大值。
+定义：二叉树各层结点个数的最大值。每一层的宽度被定义为两个端点（该层最左和最右的非空节点，两端点间的`null`节点也计入长度）之间的长度。
+
+当然，你也可以用广度优先遍历求出二维数组来，然后再找出数组中最长的，就是宽度了。 
 
 
 
