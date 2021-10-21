@@ -50,16 +50,16 @@
 3. `return` 基本类型数据
 
     ```js
-
+    
     function Test (name) {
       this.name = name
-
+    
       return 1
     }
-
+    
     const t = new Test('xx')
     console.log(t) // '{name: "xx"}'
-
+    
     ```
 
     和没有 `return` 时效果一样。
@@ -129,9 +129,9 @@ __将构造函数的作用域赋给新对象__ ，就是给这个新对象构造
 3. 简化：用 `Object.create()` 来简化上面两步：
 
     ```js
-
-    let obj = obj = Object.create(constr.prototype)
-
+    
+    let obj = Object.create(constr.prototype)
+    
     ```
 
     使用 `Object.create(object, objectProps)` 这种方法，第一个参数就是要创建的对象的原型
@@ -164,9 +164,9 @@ __如果这个函数有返回值且返回值是对象，则返回；否则，就
     所以：判断 `res` 是不是 `object` 类型，如果是 `object` 类型，那么就返回 `res`，否则，返回 `obj`。
 
     ```js
-
+    
     return res instanceof Object ? res : obj
-
+    
     ```
 
     > 使用 `res instanceof Object` 就能判断 `res` 是否为对象类型。
@@ -210,7 +210,7 @@ Object.create(proto, [propertiesObject])
     > 更多的请移步：[关于Object.defineProperty() 和 Object.defineProperties()](https://juejin.cn/post/6861089494158802957)
 
     ```js
-
+    
     let xx = Object.create({a: 1}, {
       b: {
           value: 2,
@@ -218,7 +218,7 @@ Object.create(proto, [propertiesObject])
           configurable: true
       }
     })
-
+    
     console.log(xx) // {b: 2}
     console.log(xx.__proto__) // {a: 1}  新对象xx的__proto__指向{a: 1}
     
@@ -227,7 +227,7 @@ Object.create(proto, [propertiesObject])
     
     console.log(xx.b);
     // expected output: 2
-
+    
     ```
 
 ### 用途
@@ -258,7 +258,7 @@ Object.create(proto, [propertiesObject])
 2. 源码：定义一个空的构造函数，然后指定构造函数的原型对象，通过 `new` 运算符创建一个空对象。
 
     ```js
-
+    
     Object.myCreate = function (proto, propertyObject = undefined) {
       if (propertyObject === null) {
         // 这里没有判断propertyObject是否是原始包装对象
@@ -277,13 +277,13 @@ Object.create(proto, [propertiesObject])
         return obj
       }
     }
-
+    
     ```
 
     > 个人理解：`if (proto === null)` 这个没有必要，因为，如果 `proto = null`，上面这句 `F.prototype = proto` ，`obj` 的原型对象已经是 `null` 了。
 
 ## Object.create()、new Object()和{}的区别
- 
+
 1. `new Object()` 和 `{}` 没有什么区别，创建的新对象的 `__proto__` 都指向 `Object.prototype`。
 
 2. `Object.create(proto, [propertiesObject])` 创建的对象的原型取决于 `proto` ， `proto` 为 `null` ，新对象是空对象，没有原型，不继承任何对象； `proto` 为指定对象，新对象的原型指向指定对象，继承指定对象
